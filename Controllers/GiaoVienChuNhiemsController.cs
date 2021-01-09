@@ -23,12 +23,33 @@ namespace DOAN52.Controllers
         }
 
         // GET: api/GiaoVienChuNhiems
-        [HttpGet]
+        [HttpGet("chunhiem")]
         public async Task<ActionResult<IEnumerable<TblGiaoVienChuNhiem>>> GetTblGiaoVienChuNhiem()
         {
             return await _context.TblGiaoVienChuNhiems.ToListAsync();
         }
-
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TblGiaoVienChuNhiem>>> GiaoVienChuNhiem()
+        {
+            //return await _context.TblBoMonTrungTams.ToListAsync();
+            var listchunhiem = from bm in _context.TblGiaoVienChuNhiems
+                               join pk in _context.TblCanBoGiangViens on bm.MaCbgv equals pk.MaCbgv
+                               select new
+                             {
+                                 pk.MaCbgv,
+                                 pk.HoVaTen,
+                                 bm.MaGvcn,
+                                 bm.MaLop,
+                                 bm.BatDau,
+                                 bm.KetThuc,
+                                 bm.HieuLuc,
+                                 bm.GhiChu,                       
+                                 bm.NgayTao,
+                                 bm.NguoiTao,
+                   
+                             };
+            return Ok(listchunhiem);
+        }
         // GET: api/GiaoVienChuNhiems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TblGiaoVienChuNhiem>> GetTblGiaoVienChuNhiem(long id)

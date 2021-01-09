@@ -8,8 +8,17 @@ namespace DOAN52.Authentication
 {
     public class RegisterModel
     {
+        
+
+        public static object Claims { get; internal set; }
+        [Key]
+        public string Id { get; set; }
+
         [Required(ErrorMessage = "User Name is required")]
         public string Username { get; set; }
+
+        [Required(ErrorMessage = "Name is required")]
+        public string FullName { get; set; }
 
         [EmailAddress]
         [Required(ErrorMessage = "Email is required")]

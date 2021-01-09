@@ -8,19 +8,28 @@ using Microsoft.EntityFrameworkCore;
 using DOAN52.Authentication;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Authorization;
+using DOAN52.Interfaces;
 
 namespace DOAN52.Controllers
 {
+
     //[Authorize(Roles = Role.Admin)]
     [Route("api/[controller]")]
     [ApiController]
+
     public class CanBoGiangViensController : ControllerBase
     {
-            private readonly ApplicationDbContext _context;
+           private readonly ApplicationDbContext _context;
+        //private ITeacherBusiness _teacherBusiness;
 
-            public CanBoGiangViensController(ApplicationDbContext context)
+        public List<TblCanBoGiangVien> GetData = new List<TblCanBoGiangVien>();
+        //TblCanBoGiangVien GetTeacher(bool GioiTinh);
+        //List<TblCanBoGiangVien> Search(int pageIndex, int pageSize, out long total, string HoVaTen, string DanToc);
+
+
+        public CanBoGiangViensController(ApplicationDbContext context)
             {
-                _context = context;
+                    _context = context;
             }
 
             // GET: api/CanBoGiangViens/
@@ -39,6 +48,7 @@ namespace DOAN52.Controllers
                                 {
                                     cb.MaCbgv,
                                     cb.HoVaTen,
+                             
                                     cb.GioiTinh,
                                     l.ChungChi,
                                     l.ChuyenNganhDaoTao,
@@ -47,6 +57,38 @@ namespace DOAN52.Controllers
                 return Ok(listcanbo);
             }
 
+
+            [HttpGet("ds")]
+            public async Task<ActionResult<IEnumerable<TblCanBoGiangVien>>> Dscanbo()
+            {
+            var listds = from cb in _context.TblCanBoGiangViens
+                         join pk in _context.TblPhongKhoas on cb.MaPk equals pk.MaPk
+                         join bm in _context.TblBoMonTrungTams on cb.MaBmtt equals bm.MaBmtt
+                         select new
+                         {
+                             pk.MaPk,
+                             pk.TenPhongKhoa,
+                             bm.MaBmtt,
+                             bm.TenBmtt,
+                             cb.MaCbgv,
+                             cb.HoVaTen,
+                             cb.Image,
+                             cb.KinhNghiem,
+                             cb.DienThoai,
+                             cb.Email,
+                             cb.GioiTinh,
+                             cb.QueQuan,
+                             cb.NgaySinh,
+                             cb.Quyen,
+                             cb.DanToc,
+                             cb.Cmnd,
+                             cb.ChucDanh
+                         };
+                                   
+                return Ok(listds);
+            }
+            
+            
 
             [HttpGet("dscanboluong")]
             public async Task<ActionResult<IEnumerable<TblCanBoGiangVien>>> GetTbldscanboluong()
@@ -58,6 +100,7 @@ namespace DOAN52.Controllers
                                      {
                                          cb.MaCbgv,
                                          cb.HoVaTen,
+                                         cb.Image,
                                          cb.GioiTinh,
                                          b.ChungChi,
                                          b.ChuyenNganhDaoTao,
@@ -97,7 +140,7 @@ namespace DOAN52.Controllers
                 return Ok(s);
             }
 
-            // GET: api/CanBoGiangViens/5
+            // GET: api/CanBoGiangViens/get-by-id/{id}
             [HttpGet("get-by-id/{id}")]
             public async Task<ActionResult<TblCanBoGiangVien>> GetTblCanBoGiangVien(string id)
             {
@@ -124,19 +167,68 @@ namespace DOAN52.Controllers
                 return Ok(listcanbo);
             }
 
-            //[HttpGet("searchgv/{id}/{id1}/{id2}")]
-            //public JsonResult GetSearch(string id , string id1 , string id2)
-            //{
-            //    IEnumerable<dynamic> data = GetData($"exec sp_canbogiangvien_search @page_index = '{id}', @page_size  = '{id1}', @HoVaTen = '{id2}' ");
-            //    List<TblCanBoGiangVien> list = new List<TblCanBoGiangVien>();
-            //    foreach(dynamic temp in data)
-            //    {
-            //        MaCbgv = temp.MaCbgv;
-            //    }
+            [HttpGet("getgvbypk/{id}")]
+            public async Task<ActionResult<IEnumerable<TblCanBoGiangVien>>> GetCanBoGiangViensByPK(string id)
+            {
+                var dscb = _context.TblCanBoGiangViens.Where(s => s.MaPk == id).ToListAsync(); 
+                return await dscb;
+            }
 
-            //}
+        //[Route("get-teacher-gender/{GioiTinh}")]
+        //[HttpGet]
+        //public TblCanBoGiangVien GetTeacher(bool GioiTinh)
+        //{
+        //    return _teacherBusiness.GetTeacher(GioiTinh);
+        //}
+        //[Route("search")]
+        //[HttpPost]
+        //public Response Search([FromBody] Dictionary<string, object> formData)
+        //{
+        //    var response = new Response();
+        //    try
+        //    {
+        //        var page = int.Parse(formData["page"].ToString());
+        //        var pageSize = int.Parse(formData["pageSize"].ToString());
+        //        string HoVaTen = "";
+        //        if (formData.Keys.Contains("HoVaTen") && !string.IsNullOrEmpty(Convert.ToString(formData["HoVaTen"])))
+        //        { HoVaTen = Convert.ToString(formData["HoVaTen"]); }
 
-            [HttpPut("{id}")]
+        //        string DanToc = "";
+        //        if (formData.Keys.Contains("DanToc") && !string.IsNullOrEmpty(Convert.ToString(formData["DanToc"])))
+        //        { DanToc = Convert.ToString(formData["DanToc"]); }
+
+        //        long total = 0;
+        //        var data = _teacherBusiness.Search(page, pageSize, out total, HoVaTen, DanToc);
+        //        response.TotalItems = total;
+        //        response.Data = data;
+        //        response.Page = page;
+        //        response.PageSize = pageSize;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //    return response;
+        //}
+
+
+
+
+
+
+        //[HttpGet("searchgv/{id}/{id1}/{id2}")]
+        //public JsonResult GetSearch(string id , string id1 , string id2)
+        //{
+        //    IEnumerable<dynamic> data = GetData($"exec sp_canbogiangvien_search @page_index = '{id}', @page_size  = '{id1}', @HoVaTen = '{id2}' ");
+        //    List<TblCanBoGiangVien> list = new List<TblCanBoGiangVien>();
+        //    foreach(dynamic temp in data)
+        //    {
+        //        MaCbgv = temp.MaCbgv;
+        //    }
+
+        //}
+
+        [HttpPut("{id}")]
             public async Task<IActionResult> PutTblCanBoGiangVien(string id, TblCanBoGiangVien tblCanBoGiangVien)
             {
                 if (id != tblCanBoGiangVien.MaCbgv)
@@ -211,5 +303,6 @@ namespace DOAN52.Controllers
             {
                 return _context.TblCanBoGiangViens.Any(e => e.MaCbgv == id);
             }
+
         }
     }

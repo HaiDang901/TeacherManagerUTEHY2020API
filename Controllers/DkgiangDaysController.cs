@@ -23,15 +23,35 @@ namespace DOAN52.Controllers
                 _context = context;
             }
 
-            // GET: api/TblDkgiangDays
-            [HttpGet]
+        // GET: api/TblDkgiangDays
+            [HttpGet("dangki")]
             public async Task<ActionResult<IEnumerable<TblDkgiangDay>>> GetTblDkgiangDay()
             {
                 return await _context.TblDkgiangDays.ToListAsync();
             }
+            [HttpGet]
+            public async Task<ActionResult<IEnumerable<TblDkgiangDay>>> DkgiangDay()
+            {
+                //return await _context.TblBoMonTrungTams.ToListAsync();
+                var listdangki = from bm in _context.TblDkgiangDays
+                                 join pk in _context.TblCanBoGiangViens on bm.MaCbgv equals pk.MaCbgv
+                                 join l in _context.TblHocPhans on bm.MaHp equals l.MaHp
+                                 select new
+                                {
+                                    pk.MaCbgv,
+                                    pk.HoVaTen,
+                                    bm.MaDkgd,
+                                    l.MaHp,
+                                    l.TenHocPhan,
+                                    bm.GhiChu,
+                                    bm.NgayDk,
+                                    pk.Status,
+                                };
+                return Ok(listdangki);
+            }
 
-            // GET: api/TblDkgiangDays/5
-            [HttpGet("{id}")]
+        // GET: api/TblDkgiangDays/5
+        [HttpGet("{id}")]
             public async Task<ActionResult<TblDkgiangDay>> GetTblDkgiangDay(long id)
             {
                 var tblDkgiangDay = await _context.TblDkgiangDays.FindAsync(id);

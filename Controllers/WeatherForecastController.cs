@@ -11,6 +11,7 @@ using DOAN52.Authentication;
 namespace DOAN52.Controllers
 {
     [Authorize(Roles = Role.Admin)]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -41,3 +42,5 @@ namespace DOAN52.Controllers
         }
     }
 }
+
+

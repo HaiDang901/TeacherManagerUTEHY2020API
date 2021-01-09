@@ -85,7 +85,15 @@ namespace DOAN52.Controllers
 
                 return tblPhongKhoa;
             }
-            // POSST: api/PhongKhoas/PostPhongKhoaDetails/CNTT
+        // POSST: api/PhongKhoas/PostPhongKhoaDetails/CNTT
+
+            [HttpGet("Checked/{id}")]
+            public ActionResult Checked(string id)
+            {
+                var answers = _context.TblPhongKhoas.Where(s => s.MaPk == id).ToList();
+                return Ok(answers);
+            }
+
             [HttpPost("PostPhongKhoaDetails/")]
             public async Task<ActionResult<TblPhongKhoa>> PostPhongKhoaDetails()
             {

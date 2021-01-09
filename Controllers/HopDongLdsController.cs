@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DOAN52.Controllers
 {
-    //[Authorize(Roles = Role.Admin)]
+    //[Authorize(Roles = Role.User)]
     [Route("api/[controller]")]
     [ApiController]
     public class HopDongLdsController : ControllerBase
@@ -24,10 +24,29 @@ namespace DOAN52.Controllers
             }
 
             // GET: api/TblHopDongLds
-            [HttpGet]
+            [HttpGet("hopdong")]
             public async Task<ActionResult<IEnumerable<TblHopDongLd>>> GetTblHopDongLd()
             {
                 return await _context.TblHopDongLds.ToListAsync();
+            }
+            [HttpGet]
+            public async Task<ActionResult<IEnumerable<TblHopDongLd>>> Hopdong()
+            {
+                //return await _context.TblBoMonTrungTams.ToListAsync();
+                var listhopdong = from bm in _context.TblHopDongLds
+                                  join pk in _context.TblCanBoGiangViens on bm.MaCbgv equals pk.MaCbgv
+                                  select new
+                                {
+                                    pk.MaCbgv,
+                                    pk.HoVaTen,
+                                    bm.MaHd,
+                                    bm.LoaiHd,
+                                    bm.TuNgay,
+                                    bm.DenNgay,
+                                    bm.GhiChu,
+                                    bm.Status
+                                };
+                return Ok(listhopdong);
             }
 
             // GET: api/TblHopDongLds/5

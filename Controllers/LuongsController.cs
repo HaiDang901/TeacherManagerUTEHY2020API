@@ -21,14 +21,34 @@ namespace DOAN52.Controllers
                 _context = context;
             }
             // GET: api/<LuongController>
-            [HttpGet]
+            [HttpGet("luong")]
 
             public async Task<ActionResult<IEnumerable<TblLuong>>> GetTblLuongs()
             {
                 return await _context.TblLuongs.ToListAsync();
             }
 
-            // GET: api/Luongs/5
+            [HttpGet]
+            public async Task<ActionResult<IEnumerable<TblLuong>>> Luong()
+            {
+                //return await _context.TblBoMonTrungTams.ToListAsync();
+                var listluong = from bm in _context.TblLuongs
+                                join pk in _context.TblBacLuongs on bm.MaBac equals pk.MaBac   
+                                 select new
+                                 {
+                                     pk.MaBac,
+                                     pk.TenBac,
+                                     bm.MaLuong,
+                                     bm.MucLuong,
+                                     bm.LuongCb,
+                                     bm.LuongPc,
+                                     bm.NgayNhan,
+                                     bm.NgayTang,
+                                     bm.Status
+                                 };
+                return Ok(listluong);
+            }
+        // GET: api/Luongs/5
             [HttpGet("{id}")]
             public async Task<ActionResult<TblLuong>> GetTblLuong(long id)
             {

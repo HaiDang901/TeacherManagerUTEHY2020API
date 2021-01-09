@@ -23,12 +23,27 @@ namespace DOAN52.Controllers
                 _context = context;
             }
 
-            // GET: api/BoMonTrungTams
-            [HttpGet]
-            public async Task<ActionResult<IEnumerable<TblBoMonTrungTam>>> GetTblBoMonTrungTams()
+        // GET: api/BoMonTrungTams
+        [HttpGet("dsBoMonTrungTam")]
+        public async Task<ActionResult<IEnumerable<TblBoMonTrungTam>>> GetTblBoMonTrungTams()
             {
-                return await _context.TblBoMonTrungTams.ToListAsync();
-            }
+            //return await _context.TblBoMonTrungTams.ToListAsync();
+                var listbomon = from bm in _context.TblBoMonTrungTams
+                            join pk in _context.TblPhongKhoas on bm.MaPk equals pk.MaPk
+                            select new
+                            {
+                                pk.TenPhongKhoa,
+                                pk.MaPk,
+                                bm.MaBmtt,
+                                bm.TenBmtt,
+                                bm.SoLuongNhanSu,
+                                bm.DiaChi,
+                                pk.Webiste,
+                                pk.NguoiTao,
+                                pk.NgayTao
+                            };
+            return Ok(listbomon);
+        }
             [HttpGet("dsbomon")]
             public async Task<ActionResult<IEnumerable<TblBoMonTrungTam>>> Getdsbomon()
             {
@@ -83,10 +98,27 @@ namespace DOAN52.Controllers
                 return tblBoMonTrungTam;
             }
 
-            // PUT: api/BoMonTrungTams/5
-            // To protect from overposting attacks, enable the specific properties you want to bind to, for
-            // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-            [HttpPut("{id}")]
+            [HttpGet("id")]
+            public async Task<ActionResult> GetBoMon( string id)
+            {
+            var bomon = from t1 in _context.TblBoMonTrungTams.Include(x => x.MaPkNavigation)
+                         where t1.MaPk == id
+                        select t1;
+            return Ok(bomon.First());
+            }
+            //[HttpGet("getBMbyPB")]
+            //public async Task<ActionResult> GetBMbyPB()
+            //{
+            //    var bomon = from t1 in _context.TblBoMonTrungTams.Include(x => x.MaPkNavigation)
+            //                where t1.MaBmtt == maPk
+            //                select t1;
+            //    return Ok(bomon.ToList());
+            //}
+
+        // PUT: api/BoMonTrungTams/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut("{id}")]
             public async Task<IActionResult> PutTblBoMonTrungTam(string id, TblBoMonTrungTam tblBoMonTrungTam)
             {
                 if (id != tblBoMonTrungTam.MaBmtt)
@@ -142,8 +174,13 @@ namespace DOAN52.Controllers
                 return CreatedAtAction("GetTblBoMonTrungTam", new { id = tblBoMonTrungTam.MaBmtt }, tblBoMonTrungTam);
             }
 
-            // DELETE: api/BoMonTrungTams/5
-            [HttpDelete("{id}")]
+
+
+
+
+
+        // DELETE: api/BoMonTrungTams/5
+        [HttpDelete("{id}")]
             public async Task<ActionResult<TblBoMonTrungTam>> DeleteTblBoMonTrungTam(string id)
             {
                 var tblBoMonTrungTam = await _context.TblBoMonTrungTams.FindAsync(id);

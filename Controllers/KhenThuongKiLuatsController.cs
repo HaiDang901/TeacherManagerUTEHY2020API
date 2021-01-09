@@ -28,7 +28,7 @@ namespace DOAN52.Controllers
                 return await _context.TblKhenThuongKiLuats.ToListAsync();
             }
 
-            // GET: api/KhenThuongKiLuats/5
+            // GET: 35
             [HttpGet("{id}")]
             public async Task<ActionResult<TblKhenThuongKiLuat>> GetTblKhenThuongKiLuat(long id)
             {
@@ -48,12 +48,12 @@ namespace DOAN52.Controllers
             [HttpPut("{id}")]
             public async Task<IActionResult> PutTblKhenThuongKiLuat(long id, TblKhenThuongKiLuat tblKhenThuongKiLuat)
             {
-                if (id != tblKhenThuongKiLuat.MaKtkl)
-                {
-                    return BadRequest();
-                }
+            if (id != tblKhenThuongKiLuat.MaKtkl)
+            {
+                return BadRequest();
+            }
 
-                _context.Entry(tblKhenThuongKiLuat).State = EntityState.Modified;
+            _context.Entry(tblKhenThuongKiLuat).State = EntityState.Modified;
 
                 try
                 {

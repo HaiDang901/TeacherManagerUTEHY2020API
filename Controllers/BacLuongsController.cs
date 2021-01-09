@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DOAN52.Controllers
 {
-    [Authorize(Roles = Role.Admin)]
+    //[Authorize(Roles = Role.Admin)]
 
     [Route("api/[controller]")]
     [ApiController]

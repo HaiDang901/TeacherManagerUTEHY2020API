@@ -11,10 +11,16 @@ namespace DOAN52.Authentication
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public ApplicationDbContext()
+        {
+
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
+
         public virtual DbSet<QuanLyPhienBan> QuanLyPhienBans { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<TblBacLuong> TblBacLuongs { get; set; }
@@ -47,6 +53,7 @@ namespace DOAN52.Authentication
         public virtual DbSet<TblTrinhDoHocVan> TblTrinhDoHocVans { get; set; }
         public virtual DbSet<TblUyNhiemThu> TblUyNhiemThus { get; set; }
         public virtual DbSet<User> User { get; set; }
+        //public virtual DbSet<RegisterModel> RegisterModel { get ; set;}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
